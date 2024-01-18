@@ -1,0 +1,75 @@
+{
+    "editor.tabSize": 4,
+    "editor.trimAutoWhitespace": true,
+    "editor.inlayHints.enabled": "off",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.exclude": {
+        "**/.gitkeep": true
+    },
+
+    "[cpp]": {
+        "editor.tabSize": 2,
+    },
+    "[c]": {
+        "editor.tabSize": 2,
+    },
+
+    "clangd.path": "clangd",
+
+    "clangd.checkUpdates": true,
+    "clangd.arguments": [
+        "--log=verbose",
+        "--pretty",
+        "--all-scopes-completion",
+        "--completion-style=bundled",
+        "--cross-file-rename",
+        "--header-insertion=never",
+        "--header-insertion-decorators",
+        "--background-index",
+        "--clang-tidy",
+        "--clang-tidy-checks=cppcoreguidelines-*,performance-*,bugprone-*,portability-*,modernize-*,google-*",
+        "--fallback-style=file",
+        "-j=16",
+        "--pch-storage=disk",
+        "--function-arg-placeholders=false",
+        "--compile-commands-dir=build"
+    ],
+
+    "doxdocgen.file.fileOrder": [
+        "file",
+        "author",
+        "date",
+        "empty",
+        "brief"
+        // "version",
+        // "copyright",
+        // "empty",
+    ],
+    "doxdocgen.file.fileTemplate": "@file {name}",
+    "doxdocgen.generic.authorName": "croquettess",
+    "doxdocgen.generic.authorTag": "@author {author}",
+    "doxdocgen.generic.briefTemplate": "@brief {text}",
+    "doxdocgen.generic.dateFormat": "YYYY-MM-DD",
+    "doxdocgen.generic.dateTemplate": "@date {date}",
+
+    "doxdocgen.generic.order": [
+        "brief",
+        "empty",
+        "tparam",
+        "param",
+        "return",
+    ],
+
+    "doxdocgen.generic.paramTemplate": "@param {param} ",
+    "doxdocgen.generic.returnTemplate": "@return {type} ",
+
+    "vim.easymotion": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.sneak": true, // s<char><char>跳转
+    "vim.leader": " ",
+    "vim.handleKeys": {
+        "<C-w>": false,
+    },
+}
