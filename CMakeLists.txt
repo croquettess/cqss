@@ -1,5 +1,15 @@
 cmake_minimum_required(VERSION 3.11.0)
-project(project VERSION 0.1.0 LANGUAGES C CXX)
+project(cqss VERSION 0.1.0 LANGUAGES C CXX)
+enable_testing()
+
+################################################################################
+# install
+################################################################################
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}"
+        CACHE PATH "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}" FORCE)
+endif()
+message(STATUS "install: ${CMAKE_INSTALL_PREFIX}")
 
 ################################################################################
 # 开启编译器最高特性
@@ -10,7 +20,13 @@ include(cmake/std.cmake)
 ################################################################################
 # 拉取子模块
 ################################################################################
-# execute_process(COMMAND git submodule)
+execute_process(COMMAND git submodule init)
+execute_process(COMMAND git submodule update)
+
+################################################################################
+# 生成compile_commands.json
+################################################################################
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 ################################################################################
 # compile_options
@@ -54,11 +70,3 @@ add_subdirectory(src)
 add_subdirectory(tools)
 add_subdirectory(test)
 
-################################################################################
-# install
-################################################################################
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/app"
-        CACHE PATH "${CMAKE_SOURCE_DIR}/app" FORCE)
-endif()
-message(STATUS "install: ${CMAKE_INSTALL_PREFIX}")

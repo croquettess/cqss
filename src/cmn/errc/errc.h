@@ -1,3 +1,11 @@
+/**
+ * @file errc.h
+ * @author croquettess
+ * @date 2024-01-19
+ *
+ * @brief error code wrapper
+ */
+
 #ifndef CQSS_CMN_ERR_ERR_HPP_
 #define CQSS_CMN_ERR_ERR_HPP_
 
@@ -8,15 +16,11 @@ namespace cqss {
 namespace cmn {
 namespace err {
 enum class Errc : int {
-  kNotFoundKey,
+  kNotFoundKey = 1,
 };
 
-inline const std::unordered_map<Errc, std::string> err_table {
-  {Errc::kNotFoundKey, "Key is not exist"},
-}
-
 class ErrCategory : public std::error_category {
-public:
+ public:
   constexpr ErrCategory() = default;
   ErrCategory(ErrCategory &) = delete;
   ErrCategory &operator=(ErrCategory &) = delete;
@@ -30,26 +34,28 @@ public:
     return "cqss error category";
   }
 
-  inline std::string message(int ec) const override {
-    const auto errc = static_cast<Errc>(ec);
-    if (err_table.find(errc) != err_table.end()) {
-      return err_table[errc];
+  std::string message(int ec) const override {
+    switch (static_cast<Errc>(ec)) {
+      case Errc::kNotFoundKey:
+        return "Not found key";
+      default:
+        return "Unknown error";
     }
-    return "Unknown error";
   }
 };
 
-} // namespace err
-} // namespace cmn
-} // namespace cqss
+}  // namespace err
+}  // namespace cmn
+}  // namespace cqss
 
 namespace std {
-template <> struct is_error_code_enum<cqss::cmn::err::Errc> : true_type {};
+template <>
+struct is_error_code_enum<cqss::cmn::err::Errc> : true_type {};
 
 inline error_code make_error_code(cqss::cmn::err::Errc ec) {
   return {static_cast<int>(ec), cqss::cmn::err::ErrCategory::Instance()};
 }
 
-} // namespace std
+}  // namespace std
 
-#endif // CQSS_CMN_ERR_ERR_HPP_
+#endif  // CQSS_CMN_ERR_ERR_HPP_

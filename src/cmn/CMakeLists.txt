@@ -1,0 +1,18 @@
+set (TARGET cmn)
+
+aux_source_directory(SRCS_DIR errc/*)
+aux_source_directory(SRCS_DIR design/*)
+add_library(${TARGET} INTERFACE)
+
+install(
+    TARGETS ${TARGET}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_ARCDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+file(GLOB ERRC_HEADER_FILES "errc/*.h" "errc/*.hpp")
+install(FILES ${ERRC_HEADER_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/errc)
+
+file(GLOB DESIGN_HEADER_FILES "design/*.h" "design/*.hpp")
+install(FILES ${DESIGN_HEADER_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/design)

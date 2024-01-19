@@ -29,7 +29,7 @@
         "--background-index",
         "--clang-tidy",
         "--clang-tidy-checks=cppcoreguidelines-*,performance-*,bugprone-*,portability-*,modernize-*,google-*",
-        "--fallback-style=file",
+        "--fallback-style=google",
         "-j=16",
         "--pch-storage=disk",
         "--function-arg-placeholders=false",
@@ -72,4 +72,7 @@
     "vim.handleKeys": {
         "<C-w>": false,
     },
+    "clangd.fallbackFlags": [
+        "-std=c++20"
+    ],
 }
