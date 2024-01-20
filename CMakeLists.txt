@@ -6,8 +6,8 @@ enable_testing()
 # install
 ################################################################################
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}"
-        CACHE PATH "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}" FORCE)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/app"
+        CACHE PATH "${CMAKE_SOURCE_DIR}/app" FORCE)
 endif()
 message(STATUS "install: ${CMAKE_INSTALL_PREFIX}")
 
@@ -66,11 +66,11 @@ endif()
 ################################################################################
 # build dir
 ################################################################################
-include_directories(src)
+include_directories(./)
 include_directories(lib)
 include_directories(tools)
 include_directories(submodule)
-add_subdirectory(src)
+add_subdirectory(cqss)
 add_subdirectory(tools)
 add_subdirectory(test)
 
