@@ -66,6 +66,10 @@ endif()
 ################################################################################
 # build dir
 ################################################################################
+include_directories(src)
+include_directories(lib)
+include_directories(tools)
+include_directories(submodule)
 add_subdirectory(src)
 add_subdirectory(tools)
 add_subdirectory(test)

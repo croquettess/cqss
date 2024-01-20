@@ -1,5 +1,5 @@
-#ifndef CQSS_CMN_DESIGN_SINGLETON_H_
-#define CQSS_CMN_DESIGN_SINGLETON_H_
+#ifndef CQSS_CMN_DESIGN_SINGLETON_HPP_
+#define CQSS_CMN_DESIGN_SINGLETON_HPP_
 
 namespace cqss {
 namespace cmn {
@@ -25,4 +25,4 @@ class ISingleton {
 }  // namespace cmn
 }  // namespace cqss
 
-#endif  // CQSS_CMN_DESIGN_SINGLETON_H_
+#endif  // CQSS_CMN_DESIGN_SINGLETON_HPP_
