@@ -1,4 +1,4 @@
-set (TARGET cmn)
+set(TARGET cmn)
 
 aux_source_directory(SRCS_DIR errc/*)
 aux_source_directory(SRCS_DIR design/*)
