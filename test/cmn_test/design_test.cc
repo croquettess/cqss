@@ -1,4 +1,4 @@
-#include "design/singleton.h"
+#include "design/singleton.hpp"
 
 #include <gtest/gtest.h>
 

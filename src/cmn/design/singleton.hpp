@@ -25,4 +25,4 @@ class ISingleton {
 }  // namespace cmn
 }  // namespace cqss
 
-#endif // CQSS_CMN_DESIGN_SINGLETON_H_
+#endif  // CQSS_CMN_DESIGN_SINGLETON_H_

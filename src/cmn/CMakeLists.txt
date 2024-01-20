@@ -12,7 +12,7 @@ install(
 )
 
 file(GLOB ERRC_HEADER_FILES "errc/*.h" "errc/*.hpp")
-install(FILES ${ERRC_HEADER_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/errc)
+install(FILES ${ERRC_HEADER_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${TARGET}/errc)
 
 file(GLOB DESIGN_HEADER_FILES "design/*.h" "design/*.hpp")
-install(FILES ${DESIGN_HEADER_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/design)
+install(FILES ${DESIGN_HEADER_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${TARGET}/design)

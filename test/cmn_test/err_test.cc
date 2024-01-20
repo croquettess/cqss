@@ -1,4 +1,4 @@
-#include "errc/errc.h"
+#include "errc/errc.hpp"
 
 #include <gtest/gtest.h>
 
