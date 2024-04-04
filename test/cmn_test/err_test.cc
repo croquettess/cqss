@@ -21,9 +21,9 @@ TEST(ErrcTest, SystemError) {
 
 TEST(ErrcTest, CqssCustomError) {
   // Test for a custom error
-  std::error_code customError = std::make_error_code(Errc::kNotFoundKey);
+  std::error_code customError = std::make_error_code(Errc::kVaildKey);
   EXPECT_TRUE(customError);  // Expecting an error
-  EXPECT_EQ("Not found key", customError.message());
+  EXPECT_EQ("Vaild Key", customError.message());
 }
 
 TEST(ErrcTest, CqssUnknownError) {

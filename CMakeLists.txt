@@ -39,6 +39,8 @@ add_compile_options( -std=c++${CMAKE_CXX_STANDARD})
 ################################################################################
 # find lib
 ################################################################################
+list(APPEND CMAKE_PREFIX_PATH "/usr/local/lib/cmake")
+
 # # boost
 # find_package(Boost 1.80.0 REQUIRED)
 # if(Boost_FOUND)
@@ -53,6 +55,14 @@ if(GTest_FOUND)
     message(STATUS "GTest version: ${GTest_VERSION}")
 else()
     message(FATAL_ERROR "GTest not found. Please install GTest.")
+endif()
+
+# glog
+find_package(glog REQUIRED)
+if(glog_FOUND)
+    message(STATUS "glog version: ${glog_VERSION}")
+else()
+    message(FATAL_ERROR "glog not found. Please install glog.")
 endif()
 
 ################################################################################

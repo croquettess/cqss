@@ -1,6 +1,6 @@
 set(TARGET log)
 
-aux_source_directory(SRCS_DIR .)
+aux_source_directory(. SRCS_DIR)
 add_library(${TARGET} INTERFACE)
 
 install(

@@ -16,7 +16,8 @@ namespace cqss {
 namespace cmn {
 namespace err {
 enum class Errc : int {
-  kNotFoundKey = 1,
+  kVaildCfg,
+  kVaildKey
 };
 
 class ErrCategory : public std::error_category {
@@ -36,8 +37,10 @@ class ErrCategory : public std::error_category {
 
   std::string message(int ec) const override {
     switch (static_cast<Errc>(ec)) {
-      case Errc::kNotFoundKey:
-        return "Not found key";
+      case Errc::kVaildCfg:
+        return "Vaild Cfg";
+      case Errc::kVaildKey:
+        return "Vaild Key";
       default:
         return "Unknown error";
     }

@@ -1,7 +1,7 @@
 set(TARGET cmn)
 
-aux_source_directory(SRCS_DIR errc/*)
-aux_source_directory(SRCS_DIR design/*)
+aux_source_directory(errc/* SRCS_DIR)
+aux_source_directory(design/* SRCS_DIR)
 add_library(${TARGET} INTERFACE)
 
 install(
