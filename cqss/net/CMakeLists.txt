@@ -5,7 +5,7 @@ add_executable(
     ${TARGET}
     ${SRCS_DIR}
 )
-target_link_libraries(${TARGET} glog::glog)
+target_link_libraries(${TARGET} glog::glog absl::strings)
 
 install(
     TARGETS ${TARGET}

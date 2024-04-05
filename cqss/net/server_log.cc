@@ -11,6 +11,5 @@ error_code Log::Init(const char *proc_name) {
   google::InitGoogleLogging(proc_name);
   google::SetStderrLogging(google::INFO);
   google::LogToStderr();
-  LOG(INFO) << "Log init successful";
   return ec;
 }

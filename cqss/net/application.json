@@ -1,4 +1,5 @@
 {
+    "protocol": "tcp",
     "model": "select",
     "domain_server": "127.0.0.1:10000",
     "listen_queue_len": 128,

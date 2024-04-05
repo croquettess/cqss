@@ -6,31 +6,45 @@
 using namespace std;
 using namespace cqss::net;
 
-std::error_code ServerEngine::Init(const char *proc_name, const char *cfg_path) {
-  std::error_code ec;
-  do {
-    ec = Log::Init(proc_name);
-    if (ec) { break; }
+error_code ServerEngine::Init(const char *proc_name, const char *cfg_path) {
+  error_code ec;
 
-    ec = ServerConfig::Instance().Init(cfg_path);
-    if (ec) { break; }
-
-    LOG(INFO) << "Engine init successful";
+  ec = Log::Init(proc_name);
+  if (ec) {
+    LOG(ERROR) << "Log init failed";
     return ec;
-  } while(false);
+  }
+  LOG(INFO) << "Log init successful";
 
-  LOG(ERROR) << "Engine Init fail";
+  ServerConfig config;
+  ec = config.Init(cfg_path);
+  if (ec) {
+    LOG(ERROR) << "Config init failed";
+    return ec;
+  }
+  LOG(INFO) << "Config init successful";
+
+  ec = server_.Init(config);
+  if (ec) {
+    LOG(ERROR) << "Server init failed";
+    return ec;
+  }
+  LOG(INFO) << "Server init successful";
+
   return ec;
 }
 
-std::error_code ServerEngine::UnInit() {
-  std::error_code ec;
+error_code ServerEngine::UnInit() {
+  error_code ec;
+  return ec;
+}
 
-  do {
-    LOG(INFO) << "Engine uninit successful.";
-    return ec;
-  } while(false);
+error_code ServerEngine::StartUp() {
+  error_code ec;
+  return ec;
+}
 
-  LOG(ERROR) << "Engine uninit fail.";
+error_code ServerEngine::Shutdown() {
+  error_code ec;
   return ec;
 }

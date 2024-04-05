@@ -65,6 +65,14 @@ else()
     message(FATAL_ERROR "glog not found. Please install glog.")
 endif()
 
+# absl
+find_package(absl REQUIRED)
+if(absl_FOUND)
+    message(STATUS "absl version: ${absl_VERSION}")
+else()
+    message(FATAL_ERROR "absl not found. Please install absl.")
+endif()
+
 ################################################################################
 # add internal lib
 ################################################################################

@@ -16,8 +16,12 @@ namespace cqss {
 namespace cmn {
 namespace err {
 enum class Errc : int {
-  kVaildCfg,
-  kVaildKey
+  kInvaildValue,
+  kInvaildCfg,
+  kInvaildKey,
+  kInvaildProtocol,
+  kInvaildModel,
+  kInvaildAddress,
 };
 
 class ErrCategory : public std::error_category {
@@ -37,10 +41,18 @@ class ErrCategory : public std::error_category {
 
   std::string message(int ec) const override {
     switch (static_cast<Errc>(ec)) {
-      case Errc::kVaildCfg:
-        return "Vaild Cfg";
-      case Errc::kVaildKey:
-        return "Vaild Key";
+      case Errc::kInvaildValue:
+        return "Invaild Value";
+      case Errc::kInvaildCfg:
+        return "Invaild Cfg";
+      case Errc::kInvaildKey:
+        return "Invaild Key";
+      case Errc::kInvaildProtocol:
+        return "Invaild Protocol";
+      case Errc::kInvaildModel:
+        return "Invaild Model";
+      case Errc::kInvaildAddress:
+        return "Invaild Address";
       default:
         return "Unknown error";
     }

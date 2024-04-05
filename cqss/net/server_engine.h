@@ -4,6 +4,8 @@
 #include "cqss/cmn/design/singleton.hpp"
 #include "cqss/cmn/errc/errc.hpp"
 
+#include "server.h"
+
 namespace cqss {
 namespace net {
 
@@ -13,6 +15,11 @@ class ServerEngine : public cqss::cmn::design::ISingleton<ServerEngine> {
  public:
   virtual std::error_code Init(const char *proc_name, const char *cfg_path);
   virtual std::error_code UnInit();
+  virtual std::error_code StartUp();
+  virtual std::error_code Shutdown();
+
+ private:
+  Server server_;
 };
 
 }  // namespace net
