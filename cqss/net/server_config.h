@@ -20,7 +20,6 @@ class ServerConfig : public cqss::cmn::design::ISingleton<ServerConfig> {
   inline const uint16_t &GetListenQueuelen() { return listen_queue_len_; }
   inline const uint16_t &GetRdBufferlen() { return rd_buffer_len_; }
   inline const uint16_t &GetWtBufferLen() { return wt_buffer_len_; }
-  inline const bool &GetIsLoad() { return is_load_; }
 
  protected:
   virtual std::error_code Load(rapidjson::Document &doc);
@@ -34,7 +33,6 @@ class ServerConfig : public cqss::cmn::design::ISingleton<ServerConfig> {
   uint16_t listen_queue_len_;
   uint16_t rd_buffer_len_;
   uint16_t wt_buffer_len_;
-  bool is_load_;
 };
 
 #endif  // CQSS_NET_SERVER_CONFIG_H_

@@ -22,12 +22,11 @@ ServerConfig::ServerConfig()
       domain_server_(""),
       listen_queue_len_(0),
       rd_buffer_len_(0),
-      wt_buffer_len_(0),
-      is_load_(false){};
+      wt_buffer_len_(0){}
 
 error_code ServerConfig::Init(const char *cfg_path) {
   error_code ec;
-  
+
   LOG(INFO) << "Init config, cfg_path: " << cfg_path;
   Document doc;
   do {
