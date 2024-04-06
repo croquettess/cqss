@@ -6,9 +6,7 @@
 using namespace std;
 using namespace cqss::net;
 
-ServerEngine::ServerEngine() {
-  server_ = make_shared<Server>();
-}
+ServerEngine::ServerEngine() { server_ = make_shared<Server>(); }
 
 error_code ServerEngine::Init(const char *proc_name, const char *cfg_path) {
   error_code ec;

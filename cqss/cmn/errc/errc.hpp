@@ -23,7 +23,8 @@ enum class Errc : int {
   kInvaildModel,
   kInvaildAddress,
 
-  kCloseConnection
+  kCloseConnection,
+  kProcessError
 };
 
 class ErrCategory : public std::error_category {
@@ -55,8 +56,11 @@ class ErrCategory : public std::error_category {
         return "Invaild Model";
       case Errc::kInvaildAddress:
         return "Invaild Address";
+
       case Errc::kCloseConnection:
         return "Close Connection";
+      case Errc::kProcessError:
+        return "Process Error";
       default:
         return "Unknown error";
     }
@@ -72,7 +76,11 @@ template <>
 struct is_error_code_enum<cqss::cmn::err::Errc> : true_type {};
 
 inline error_code make_error_code(cqss::cmn::err::Errc ec) {
-  return {static_cast<int>(ec), cqss::cmn::err::ErrCategory::Instance()};
+  return error_code(static_cast<int>(ec), cqss::cmn::err::ErrCategory::Instance());
+}
+
+inline error_code make_errno_error_code() {
+  return error_code(errno, generic_category());
 }
 
 }  // namespace std

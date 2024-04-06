@@ -9,7 +9,7 @@ namespace cqss {
 namespace net {
 
 class Log {
-public:
+ public:
   static std::error_code Init(const char *proc_name);
   static std::error_code UnInit();
 };

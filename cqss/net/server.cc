@@ -14,13 +14,17 @@ using namespace std;
 using namespace cqss::net;
 using namespace cqss::cmn::err;
 
-ConnInfo::ConnInfo() : fd(-1), is_close(false) {
+SocketInfo::SocketInfo() : fd(-1), is_close(false) {
   addr_len = sizeof(addr);
   memset(&addr, 0, addr_len);
 }
 
-Server::Server()
-    : socket_(-1), listen_queue_len_(0), rd_buffer_len_(0), wt_buffer_len_(0) {}
+Server::Server(const proc_io_cb_t &cb)
+    : socket_(-1),
+      listen_queue_len_(0),
+      rd_buffer_len_(0),
+      wt_buffer_len_(0),
+      proc_io_cb_(cb) {}
 
 error_code Server::Init(ServerConfig &config) {
   error_code ec;
@@ -29,7 +33,7 @@ error_code Server::Init(ServerConfig &config) {
   if (config.GetProtocol() == ServerProtocol::kTcp) {
     if ((socket_ = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
       LOG(ERROR) << "Create socket failed, msg: " << strerror(errno);
-      return error_code(errno, generic_category());
+      return make_errno_error_code();
     }
   } else {
     LOG(ERROR) << "Invaild Protocal";
@@ -50,7 +54,7 @@ error_code Server::Init(ServerConfig &config) {
   if (bind(socket_, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == -1) {
     close(socket_);
     LOG(ERROR) << "Bind failed, msg: " << strerror(errno);
-    return error_code(errno, generic_category());
+    return make_errno_error_code();
   }
   LOG(INFO) << "Bind address successful, domain server: " << ip << ":" << port;
 
@@ -70,7 +74,7 @@ error_code Server::StartUp() {
   error_code ec;
   if (listen(socket_, listen_queue_len_) == -1) {
     LOG(ERROR) << "Listen fail, msg: " << strerror(errno);
-    return error_code(errno, generic_category());
+    return make_errno_error_code();
   }
   LOG(INFO) << "Listening...";
 
@@ -99,8 +103,8 @@ error_code Server::Select() {
   int nfds = socket_;
   int nready;
 
-  ConnInfo info;
-  unordered_map<int, ConnInfo> infos;
+  SocketInfo info;
+  unordered_map<int, SocketInfo> infos;
   while (true) {
     crset = rset;
     nready = select(nfds + 1, &crset, nullptr, nullptr, nullptr);
@@ -137,7 +141,7 @@ error_code Server::Select() {
   }
 }
 
-error_code Server::Accept(ConnInfo &info) {
+error_code Server::Accept(SocketInfo &info) {
   error_code ec;
   auto &fd = info.fd;
   auto &addr = info.addr;
@@ -145,33 +149,44 @@ error_code Server::Accept(ConnInfo &info) {
   fd = accept(socket_, reinterpret_cast<sockaddr *>(&addr), &addr_len);
   if (fd == -1) {
     LOG(ERROR) << "Accept a connection failed, msg:" << strerror(errno);
-    return error_code(errno, generic_category());
+    return make_errno_error_code();
   }
-  LOG(INFO) << "Accept a connection , endpoints: "
-            << info.GetEndpoints() << ", socket fd: " << info.fd;
+  LOG(INFO) << "Accept a connection , endpoints: " << info.GetEndpoints()
+            << ", socket fd: " << info.fd;
   return ec;
 }
 
-error_code Server::ProcIO(ConnInfo &info) {
+error_code Server::ProcIO(SocketInfo &info) {
   error_code ec;
   const auto &fd = info.fd;
+  const auto &endpoints = info.GetEndpoints();
 
   char rd_buffer[rd_buffer_len_];
+  char wt_buffer[wt_buffer_len_];
+  size_t wt_buffer_len;
   auto recv_len = recv(fd, rd_buffer, rd_buffer_len_ - 1, 0);
   rd_buffer[recv_len] = '\0';
   if (recv_len > 0) {
-    LOG(INFO) << "Recv from " << info.GetEndpoints() << ", msg: " << rd_buffer;
+    LOG(INFO) << "Recv from " << endpoints << ", msg: " << rd_buffer;
+    ec = proc_io_cb_(rd_buffer, recv_len, wt_buffer, wt_buffer_len);
+    if (ec) {
+      LOG(ERROR) << "Process msg from " << endpoints
+                 << " failed, msg: " << rd_buffer;
+      return make_error_code(Errc::kProcessError);
+    }
 
-    char wt_buffer[wt_buffer_len_];
-    strncpy(wt_buffer, rd_buffer, recv_len+1);
-
-    send(fd, wt_buffer, strlen(wt_buffer), 0);
+    if (-1 == send(fd, wt_buffer, wt_buffer_len, 0)) {
+      LOG(ERROR) << "Send msg to " << endpoints
+                 << " failed, errmsg: " << strerror(errno);
+      return make_errno_error_code();
+    }
   } else if (recv_len == 0) {
-    LOG(INFO) << "Close connection, endpoints: " << info.GetEndpoints();
+    LOG(INFO) << "Close connection, endpoints: " << endpoints;
     return make_error_code(Errc::kCloseConnection);
   } else {
-    LOG(ERROR) << "Recv from " << info.GetEndpoints() << " failed, msg" << strerror(errno);
-    return error_code(errno, generic_category());
+    LOG(ERROR) << "Recv from " << endpoints
+               << " failed, errmsg: " << strerror(errno);
+    return make_errno_error_code();
   }
 
   return ec;

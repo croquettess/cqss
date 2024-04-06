@@ -12,18 +12,9 @@
 namespace cqss {
 namespace net {
 
-enum class ServerProtocol {
-  kUnknown,
-  kTcp,
-  kUdp
-};
+enum class ServerProtocol { kUnknown, kTcp, kUdp };
 
-enum class ServerModel {
-  kUnKnown,
-  kSelect,
-  kPoll,
-  kEpoll
-};
+enum class ServerModel { kUnKnown, kSelect, kPoll, kEpoll };
 
 class ServerConfig {
  public:
