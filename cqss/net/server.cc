@@ -31,7 +31,7 @@ error_code Server::Init(ServerConfig &config) {
 
   if (config.GetProtocol() == ServerProtocol::kTcp) {
     if ((socket_ = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
-      LOG(ERROR) << "Create socket failed, msg: " << strerror(errno);
+      LOG(ERROR) << "Create socket failed, errmsg: " << strerror(errno);
       return make_errno_error_code();
     }
   } else {
@@ -52,7 +52,7 @@ error_code Server::Init(ServerConfig &config) {
   addr.sin_port = htons(port);
   if (bind(socket_, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == -1) {
     close(socket_);
-    LOG(ERROR) << "Bind failed, msg: " << strerror(errno);
+    LOG(ERROR) << "Bind failed, errmsg: " << strerror(errno);
     return make_errno_error_code();
   }
   LOG(INFO) << "Bind address successful, domain server: " << ip << ":" << port;
@@ -72,7 +72,7 @@ error_code Server::Init(ServerConfig &config) {
 error_code Server::StartUp() {
   error_code ec;
   if (listen(socket_, listen_queue_len_) == -1) {
-    LOG(ERROR) << "Listen fail, msg: " << strerror(errno);
+    LOG(ERROR) << "Listen fail, errmsg: " << strerror(errno);
     return make_errno_error_code();
   }
   LOG(INFO) << "Listening...";
@@ -147,7 +147,7 @@ error_code Server::Accept(SocketInfo &info) {
   auto &addr_len = info.addr_len;
   fd = accept(socket_, reinterpret_cast<sockaddr *>(&addr), &addr_len);
   if (fd == -1) {
-    LOG(ERROR) << "Accept a connection failed, msg:" << strerror(errno);
+    LOG(ERROR) << "Accept a connection failed, errmsg:" << strerror(errno);
     return make_errno_error_code();
   }
   LOG(INFO) << "Accept a connection , endpoints: " << info.GetEndpoints()
