@@ -25,10 +25,10 @@ class ServerConfig {
   inline const ServerProtocol &GetProtocol() { return protocol_; }
   inline const ServerModel &GetModel() { return model_; }
   inline const std::string &GetIp() { return ip_; }
-  inline const uint16_t &GetPort() { return port_; }
-  inline const uint16_t &GetListenQueuelen() { return listen_queue_len_; }
-  inline const uint16_t &GetRdBufferlen() { return rd_buffer_len_; }
-  inline const uint16_t &GetWtBufferLen() { return wt_buffer_len_; }
+  inline const size_t &GetPort() { return port_; }
+  inline const size_t &GetListenQueuelen() { return listen_queue_len_; }
+  inline const size_t &GetRdBufferlen() { return rd_buffer_len_; }
+  inline const size_t &GetWtBufferLen() { return wt_buffer_len_; }
 
  protected:
   virtual std::error_code Parse(rapidjson::Document &doc);
@@ -40,10 +40,10 @@ class ServerConfig {
   ServerProtocol protocol_;
   ServerModel model_;
   std::string ip_;
-  uint16_t port_;
-  uint16_t listen_queue_len_;
-  uint16_t rd_buffer_len_;
-  uint16_t wt_buffer_len_;
+  size_t port_;
+  size_t listen_queue_len_;
+  size_t rd_buffer_len_;
+  size_t wt_buffer_len_;
 };
 
 }  // namespace net

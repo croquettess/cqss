@@ -55,9 +55,9 @@ class Server {
 
  private:
   int socket_;
-  uint16_t listen_queue_len_;
-  uint16_t rd_buffer_len_;
-  uint16_t wt_buffer_len_;
+  size_t listen_queue_len_;
+  size_t rd_buffer_len_;
+  size_t wt_buffer_len_;
   proc_io_cb_t proc_io_cb_;
 };
 
