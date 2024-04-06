@@ -22,6 +22,8 @@ enum class Errc : int {
   kInvaildProtocol,
   kInvaildModel,
   kInvaildAddress,
+
+  kCloseConnection
 };
 
 class ErrCategory : public std::error_category {
@@ -53,6 +55,8 @@ class ErrCategory : public std::error_category {
         return "Invaild Model";
       case Errc::kInvaildAddress:
         return "Invaild Address";
+      case Errc::kCloseConnection:
+        return "Close Connection";
       default:
         return "Unknown error";
     }

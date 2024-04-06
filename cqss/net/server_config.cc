@@ -50,12 +50,12 @@ error_code ServerConfig::Init(const char *cfg_path) {
   }
   LOG(INFO) << "Read cfg successful";
 
-  ec = Load(doc);
+  ec = Parse(doc);
   if (ec) {
-    LOG(ERROR) << "Load cfg failed";
+    LOG(ERROR) << "Parse cfg failed";
     return ec;
   }
-  LOG(INFO) << "Load cfg successful";
+  LOG(INFO) << "Parse cfg successful";
 
   return ec;
 }
@@ -87,9 +87,9 @@ error_code ServerConfig::Read(const char *cfg_path, Document &doc) {
   return ec;
 }
 
-error_code ServerConfig::Load(Document &doc) {
+error_code ServerConfig::Parse(Document &doc) {
   error_code ec;
-  LOG(INFO) << "Load cfg";
+  LOG(INFO) << "Parse cfg";
 
   if (!doc.HasMember(PROTOCOL) || !doc[PROTOCOL].IsString()) {
     LOG(ERROR) << "Invaild key: " << PROTOCOL;

@@ -20,6 +20,16 @@ int main(int argc, char *argv[]) {
   }
   LOG(INFO) << "Engine init successful";
 
+  if (engine.StartUp()) {
+    LOG(ERROR) << "Engine startup failed";
+    return 1;
+  }
+
+  if (engine.Shutdown()) {
+    LOG(ERROR) << "Engine shutdown failed";
+    return 1;
+  }
+
   if (engine.UnInit()) {
     LOG(ERROR) << "Engine uninit failed";
     return 1;

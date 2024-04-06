@@ -40,7 +40,7 @@ class ServerConfig {
   inline const uint16_t &GetWtBufferLen() { return wt_buffer_len_; }
 
  protected:
-  virtual std::error_code Load(rapidjson::Document &doc);
+  virtual std::error_code Parse(rapidjson::Document &doc);
 
  private:
   std::error_code Read(const char *cfg_path, rapidjson::Document &doc);
