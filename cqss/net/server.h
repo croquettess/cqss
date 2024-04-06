@@ -4,7 +4,6 @@
 #include <string>
 
 #include <arpa/inet.h>
-#include <sys/select.h>
 #include <functional>
 
 #include "cqss/cmn/errc/errc.hpp"

@@ -3,7 +3,6 @@
 #include <cerrno>
 #include <unordered_map>
 #include <sys/socket.h>
-#include <arpa/inet.h>
 #include <sys/select.h>
 
 #include "cqss/cmn/errc/errc.hpp"
