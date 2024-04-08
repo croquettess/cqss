@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <sys/socket.h>
 #include <sys/select.h>
+#include <sys/epoll.h>
 
 #include "cqss/cmn/errc/errc.hpp"
 
@@ -20,6 +21,7 @@ SocketInfo::SocketInfo() : fd(-1), is_close(false) {
 
 Server::Server(const proc_io_cb_t &cb)
     : socket_(-1),
+      model_(ServerModel::kUnKnown),
       listen_queue_len_(0),
       rd_buffer_len_(0),
       wt_buffer_len_(0),
@@ -57,6 +59,8 @@ error_code Server::Init(ServerConfig &config) {
   }
   LOG(INFO) << "Bind address successful, domain server: " << ip << ":" << port;
 
+  model_ = config.GetModel();
+
   listen_queue_len_ = config.GetListenQueuelen();
   LOG(INFO) << "Listen queue size: " << listen_queue_len_;
 
@@ -77,10 +81,22 @@ error_code Server::StartUp() {
   }
   LOG(INFO) << "Listening...";
 
-  ec = Select();
+  switch (model_) {
+    case ServerModel::kUnKnown:
+      break;
+    case ServerModel::kSelect:
+      ec = Select();
+      break;
+    case ServerModel::kPoll:
+      break;
+    case ServerModel::kEpoll:
+      ec = Epoll();
+      break;
+    default:
+      break;
+  }
   if (ec) {
-    LOG(ERROR) << "Enable select model failed";
-    return ec;
+    LOG(ERROR) << "Enable io multiplex failed";
   }
 
   return ec;
@@ -112,7 +128,7 @@ error_code Server::Select() {
         if (fd == socket_) {
           ec = Accept(info);
           if (ec) {
-            return ec;
+            continue;
           }
           auto &fd = info.fd;
           FD_SET(fd, &rset);
@@ -128,9 +144,9 @@ error_code Server::Select() {
           auto &info = infos[fd];
           ec = ProcIO(info);
           if (ec) {
+            FD_CLR(info.fd, &rset);
             close(info.fd);
             info.is_close = true;
-            FD_CLR(info.fd, &rset);
             LOG(INFO) << "Deregister " << info.GetEndpoints() << " from rset";
           }
         }
@@ -138,6 +154,52 @@ error_code Server::Select() {
       }
     }
   }
+}
+
+error_code Server::Epoll() {
+  error_code ec;
+  int epfd = epoll_create(1);
+  epoll_event epev;
+  epev.events = EPOLLIN;
+  epev.data.fd = socket_;
+  epoll_ctl(epfd, EPOLL_CTL_ADD, socket_, &epev);
+
+  epoll_event epevs[1024];
+  memset(&epevs, 0, sizeof(epevs));
+  SocketInfo info;
+  unordered_map<int, SocketInfo> infos;
+  while (true) {
+    int nready = epoll_wait(epfd, epevs, 1024, -1);
+    for (int i = 0; i < nready; ++i) {
+      const auto &fd = epevs[i].data.fd;
+      auto &ev = epevs[i].events;
+      if (socket_ == fd) {
+          ec = Accept(info);
+          if (ec) {
+            continue;
+          }
+          epev.events = EPOLLIN;
+          epev.data.fd = info.fd;
+          epoll_ctl(epfd, EPOLL_CTL_ADD, info.fd, &epev);
+          infos.emplace(make_pair(info.fd, info));
+          LOG(INFO) << "Register " << info.GetEndpoints() << " to rest";
+      } else if (ev & EPOLLIN) {
+          if (infos.find(fd) == infos.end()) {
+            return make_error_code(Errc::kInvaildValue);
+          }
+          auto &info = infos[fd];
+          ec = ProcIO(info);
+          if (ec) {
+            epoll_ctl(epfd, EPOLL_CTL_DEL, fd, NULL);
+            close(fd);
+            info.is_close = true;
+            LOG(INFO) << "Deregister " << info.GetEndpoints() << " from rset";
+          }
+      }
+    }
+  }
+
+  return ec;
 }
 
 error_code Server::Accept(SocketInfo &info) {

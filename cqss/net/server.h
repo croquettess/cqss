@@ -50,11 +50,13 @@ class Server {
 
  private:
   std::error_code Select();
+  std::error_code Epoll();
   std::error_code Accept(SocketInfo &info);
   std::error_code ProcIO(SocketInfo &info);
 
  private:
   int socket_;
+  ServerModel model_;
   size_t listen_queue_len_;
   size_t rd_buffer_len_;
   size_t wt_buffer_len_;

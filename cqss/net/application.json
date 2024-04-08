@@ -1,6 +1,6 @@
 {
     "protocol": "tcp",
-    "model": "select",
+    "model": "epoll",
     "domain_server": "192.168.31.26:10000",
     "listen_queue_len": 128,
     "rd_buffer_len": 1024,
