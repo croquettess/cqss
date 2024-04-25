@@ -10,6 +10,10 @@
 
 #include "cqss_atomic.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif  //__cplusplus
+
 typedef cqss_atomic_int_t cqss_spinlock_t;
 
 /**
@@ -58,5 +62,9 @@ typedef cqss_atomic_int_t cqss_spinlock_t;
     while (!cqss_atomic_cmp_set(ptr, 0, 1)) { \
     }                                         \
   } while (0)
+
+#ifdef __cplusplus
+}
+#endif  //__cplusplus
 
 #endif  // CQSS_CORE_CQSS_SPINLOCK_H_
