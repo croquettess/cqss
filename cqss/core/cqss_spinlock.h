@@ -14,54 +14,35 @@
 extern "C" {
 #endif  //__cplusplus
 
-typedef cqss_atomic_int_t cqss_spinlock_t;
+typedef cqss_atomic_size_t cqss_spin_t;
 
 /**
  * @brief 初始化自旋锁
  *
  * @param ptr 自旋锁指针
  */
-#define cqss_spinlock_init(ptr) (*(ptr) = 0)
+#define cqss_spin_init(ptr) cqss_atomic_store(ptr, 0)
 
 /**
  * @brief 销毁自旋锁
  *
  * @param ptr 自旋锁指针
  */
-#define cqss_spinlock_destroy(ptr)
+#define cqss_spin_destroy(ptr)
 
 /**
- * @brief 加锁(阻塞)
+ * @brief 加锁
  *
  * @param ptr 自旋锁指针
  */
-#define cqss_spinlock_lock(ptr) _cqss_spinlock_lock(ptr)
-
-/**
- * @brief 加锁(非阻塞)
- *
- * @param ptr 自旋锁指针
- * @return 1: 加锁成功 0: 加锁失败
- */
-#define cqss_spinlock_try_lock(ptr) cqss_atomic_cmp_set(ptr, 0, 1)
+void cqss_spin_lock(cqss_spin_t *lock);
 
 /**
  * @brief 解锁
  *
  * @param ptr 自旋锁指针
  */
-#define cqss_spinlock_unlock(ptr) (*(ptr) = 0)
-
-/**
- * @brief 阻塞加锁具体实现
- *
- * @param ptr 自旋锁指针
- */
-#define _cqss_spinlock_lock(ptr)              \
-  do {                                        \
-    while (!cqss_atomic_cmp_set(ptr, 0, 1)) { \
-    }                                         \
-  } while (0)
+#define cqss_spin_unlock(ptr) cqss_atomic_store(ptr, 0)
 
 #ifdef __cplusplus
 }
