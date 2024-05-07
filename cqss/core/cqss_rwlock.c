@@ -10,7 +10,6 @@
 
 #include "cqss_core.h"
 
-
 #define CQSS_RWLOCK_MAX_SPIN ((cqss_size_t)2048)
 #define CQSS_RWLOCK_UNLOCK ((cqss_size_t)0)
 #define CQSS_RWLOCK_WTLOCK ((cqss_size_t)-1)
@@ -38,19 +37,20 @@ static inline bool cqss_rwlock_is_wtlock(cqss_rwlock_t *lock,
  * @brief 尝试加写锁
  *
  * @param lock 读写锁指针
- * @return cqss_size_t CQSS_RWLOCK_UNLOCK
+ * @return true 加写锁成功
+ * @return false 加写锁失败
  */
-static inline cqss_size_t cqss_rwlock_try_wtlock(cqss_rwlock_t *lock);
+static inline bool cqss_rwlock_try_wtlock(cqss_rwlock_t *lock);
 
 /**
- * @brief
+ * @brief 尝试加读锁
  *
  * @param lock 读写锁指针
- * @param ref_cnt 读写锁引用计数
- * @return cqss_size_t 加锁前的读写锁引用计数
+ * @return true 加读锁成功
+ * @return false 加读锁失败
  */
-static inline cqss_size_t cqss_rwlock_try_rdlock(cqss_rwlock_t *lock,
-                                                 cqss_atomic_size_t ref_cnt);
+static inline bool cqss_rwlock_try_rdlock(cqss_rwlock_t *lock,
+                                          cqss_atomic_size_t ref_cnt);
 
 static inline bool cqss_rwlock_is_lock(cqss_rwlock_t *lock) {
   return CQSS_RWLOCK_UNLOCK != cqss_atomic_load(lock);
@@ -62,12 +62,12 @@ static inline bool cqss_rwlock_is_wtlock(cqss_rwlock_t *lock,
   return CQSS_RWLOCK_WTLOCK == *ref_cnt;
 }
 
-static inline cqss_size_t cqss_rwlock_try_wtlock(cqss_rwlock_t *lock) {
+static inline bool cqss_rwlock_try_wtlock(cqss_rwlock_t *lock) {
   return cqss_atomic_cmp_set(lock, CQSS_RWLOCK_UNLOCK, CQSS_RWLOCK_WTLOCK);
 }
 
-static inline cqss_size_t cqss_rwlock_try_rdlock(cqss_rwlock_t *lock,
-                                                 cqss_atomic_size_t ref_cnt) {
+static inline bool cqss_rwlock_try_rdlock(cqss_rwlock_t *lock,
+                                          cqss_atomic_size_t ref_cnt) {
   return cqss_atomic_cmp_set(lock, ref_cnt, ref_cnt + 1);
 }
 

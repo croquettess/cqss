@@ -53,7 +53,8 @@ typedef volatile uintptr_t cqss_atomic_pointer_t;
 /**
  * @brief 原子变量比较交换
  *
- * @return
+ * @return true 成功
+ * @return false 失败
  */
 #define cqss_atomic_cmp_set(lock, old, set) \
   __sync_bool_compare_and_swap(lock, old, set)
