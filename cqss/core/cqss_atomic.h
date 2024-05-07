@@ -12,12 +12,22 @@
 extern "C" {
 #endif  // __cplusplus
 
-#include <stddef.h>
-#include <stdint.h>
+#include "cqss_core.h"
 
 typedef volatile int cqss_atomic_int_t;
+
+typedef volatile cqss_int8_t cqss_atomic_int8_t;
+typedef volatile cqss_int16_t cqss_atomic_int16_t;
+typedef volatile cqss_int32_t cqss_atomic_int32_t;
+typedef volatile cqss_int64_t cqss_atomic_int64_t;
+typedef volatile cqss_ssize_t cqss_atomic_ssize_t;
+
+typedef volatile cqss_uint8_t cqss_atomic_uint8_t;
+typedef volatile cqss_uint16_t cqss_atomic_uint16_t;
+typedef volatile cqss_uint32_t cqss_atomic_uint32_t;
+typedef volatile cqss_uint64_t cqss_atomic_uint64_t;
+typedef volatile cqss_size_t cqss_atomic_size_t;
 typedef volatile uintptr_t cqss_atomic_pointer_t;
-typedef volatile size_t cqss_atomic_size_t;
 
 /**
  * @brief 设置内存屏障
@@ -25,6 +35,20 @@ typedef volatile size_t cqss_atomic_size_t;
  * @return
  */
 #define cqss_memory_barrier() __sync_synchronize()
+
+/**
+ * @brief 初始化原子变量
+ *
+ * @return
+ */
+#define cqss_atomic_store(ptr, val) (*(ptr) = val)
+
+/**
+ * @brief 加载原子变量
+ *
+ * @return
+ */
+#define cqss_atomic_load(ptr) (*(ptr))
 
 /**
  * @brief 原子变量比较交换
